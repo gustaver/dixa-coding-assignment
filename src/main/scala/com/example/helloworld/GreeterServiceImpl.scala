@@ -13,24 +13,9 @@ import akka.stream.scaladsl.Source
 class GreeterServiceImpl(system: ActorSystem[_]) extends GreeterService {
   private implicit val sys: ActorSystem[_] = system
 
-  val (inboundHub: Sink[HelloRequest, NotUsed], outboundHub: Source[HelloReply, NotUsed]) =
-    MergeHub.source[HelloRequest]
-    .map(request => HelloReply(s"Hello, ${request.name}"))
-      .toMat(BroadcastHub.sink[HelloReply])(Keep.both)
-      .run()
-
-  override def sayHello(request: HelloRequest): Future[HelloReply] = {
-    Future.successful(HelloReply(s"Hello, ${request.name}"))
-  }
-
-  override def sayHelloToAll(in: Source[HelloRequest, NotUsed]): Source[HelloReply, NotUsed] = {
-    in.runWith(inboundHub)
-    outboundHub
-  }
-
   override def itKeepsReplying(in: HelloRequest): Source[HelloReply, NotUsed] = {
-    println(s"sayHello to ${in.name} with stream of chars...")
+    println(s"itKeepsReplying n ${in.n}")
     val primes = List(1, 2, 3, 5, 7)
-    Source(primes).map(p => HelloReply(p.toString))
+    Source(primes).map(p => HelloReply(p))
   }
 }
