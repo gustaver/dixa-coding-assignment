@@ -26,6 +26,7 @@ object PrimesProxy {
     val matcher: PathMatcher1[Option[Int]] =
       "prime" / IntNumber.?
 
+    // to stream results to CSV
     implicit val streamingSupport =
       EntityStreamingSupport.csv(maxLineLength = 16 * 1024)
         .withSupported(ContentTypeRange(ContentTypes.`text/plain(UTF-8)`))
@@ -33,15 +34,16 @@ object PrimesProxy {
         .withFramingRenderer(Flow[ByteString].map(bs => bs ++ ByteString(",")))
 
     val route =
-      path(matcher) { n: Option[Int] =>
-        get {
-          val limit = n.get
-          println(s"Proxy got limit $limit")
-          val responseStream =
-            client.primesStream(PrimeRequest(limit))
-              .map(r => HttpEntity(ContentTypes.`text/plain(UTF-8)`, ByteString(r.prime.toString)))
-          complete(responseStream)
-        }
+      path(matcher) {
+        case Some(n) =>
+          get {
+            val responseStream =
+              client.primesStream(PrimeRequest(n))
+                .map(r => HttpEntity(ContentTypes.`text/plain(UTF-8)`, ByteString(r.prime.toString)))
+            complete(responseStream)
+          }
+        case None =>
+          complete(HttpResponse(StatusCodes.BadRequest, entity = "Missing <number> parameter"))
       }
 
     val bindingFuture = Http()

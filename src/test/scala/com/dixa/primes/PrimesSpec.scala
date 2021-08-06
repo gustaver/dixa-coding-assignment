@@ -43,7 +43,7 @@ class PrimesSpec
     testKit.shutdownTestKit()
   }
 
-  "GreeterService" should {
+  "PrimesService" should {
     "primes up to 2" in {
       val reply = client.primesStream(PrimeRequest(2))
         .map(r => r.prime)

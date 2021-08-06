@@ -2,7 +2,6 @@ package com.dixa.primes
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
-import akka.stream._
 import akka.stream.scaladsl._
 
 import org.scalatest.BeforeAndAfterAll

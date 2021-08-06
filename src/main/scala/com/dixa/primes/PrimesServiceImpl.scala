@@ -9,7 +9,6 @@ class PrimesServiceImpl(system: ActorSystem[_]) extends PrimesService {
 
   override def primesStream(in: PrimeRequest): Source[PrimeResponse, NotUsed] = {
     val n = in.n
-    println(s"primesStream requested for n: $n")
-    Source(Primes.primesUpTo(n)).map(p => PrimeResponse(p))
+    Source(Primes.efficientPrimesUpTo(n)).map(p => PrimeResponse(p))
   }
 }
