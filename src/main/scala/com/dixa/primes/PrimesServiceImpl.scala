@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.dixa.primes
 
 import scala.concurrent.Future
 
@@ -10,12 +10,13 @@ import akka.stream.scaladsl.MergeHub
 import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 
-class GreeterServiceImpl(system: ActorSystem[_]) extends GreeterService {
+class PrimesServiceImpl(system: ActorSystem[_]) extends PrimesService {
   private implicit val sys: ActorSystem[_] = system
 
-  override def itKeepsReplying(in: HelloRequest): Source[HelloReply, NotUsed] = {
-    println(s"itKeepsReplying n ${in.n}")
-    val primes = List(1, 2, 3, 5, 7)
-    Source(primes).map(p => HelloReply(p))
+  override def primesStream(in: PrimeRequest): Source[PrimeResponse, NotUsed] = {
+    val n = in.n
+    println(s"primesStream requested for n: $n")
+    val primes = 1 to n
+    Source(primes).map(p => PrimeResponse(p))
   }
 }

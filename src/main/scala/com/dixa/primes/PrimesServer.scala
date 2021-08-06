@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.dixa.primes
 
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -27,25 +27,25 @@ import scala.util.Success
 import scala.concurrent.duration._
 
 
-object GreeterServer {
+object PrimesServer {
 
   def main(args: Array[String]): Unit = {
     // important to enable HTTP/2 in ActorSystem's config
     val conf = ConfigFactory.parseString("akka.http.server.preview.enable-http2 = on")
       .withFallback(ConfigFactory.defaultApplication())
-    val system = ActorSystem[Nothing](Behaviors.empty, "GreeterServer", conf)
-    new GreeterServer(system).run()
+    val system = ActorSystem[Nothing](Behaviors.empty, "PrimesServer", conf)
+    new PrimesServer(system).run()
   }
 }
 
-class GreeterServer(system: ActorSystem[_]) {
+class PrimesServer(system: ActorSystem[_]) {
 
   def run(): Future[Http.ServerBinding] = {
     implicit val sys = system
     implicit val ec: ExecutionContext = system.executionContext
 
     val service: HttpRequest => Future[HttpResponse] =
-      GreeterServiceHandler(new GreeterServiceImpl(system))
+      PrimesServiceHandler(new PrimesServiceImpl(system))
 
     val bound: Future[Http.ServerBinding] = Http(system)
       .newServerAt(interface = "127.0.0.1", port = 8080)
@@ -65,13 +65,13 @@ class GreeterServer(system: ActorSystem[_]) {
     bound
   }
 
-  // tried to remove unnecessary security stuff... ¯\_(ツ)_/¯
+  // tried to remove security boilerplate but... ¯\_(ツ)_/¯
   private def serverHttpContext: HttpsConnectionContext = {
     val privateKey =
       DERPrivateKeyLoader.load(PEMDecoder.decode(readPrivateKeyPem()))
     val fact = CertificateFactory.getInstance("X.509")
     val cer = fact.generateCertificate(
-      classOf[GreeterServer].getResourceAsStream("/certs/server1.pem")
+      classOf[PrimesServer].getResourceAsStream("/certs/server1.pem")
     )
     val ks = KeyStore.getInstance("PKCS12")
     ks.load(null)

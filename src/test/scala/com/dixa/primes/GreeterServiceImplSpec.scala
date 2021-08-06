@@ -1,5 +1,5 @@
 //#full-example
-package com.example.helloworld
+package com.dixa.primes
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem

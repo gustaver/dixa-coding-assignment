@@ -1,4 +1,4 @@
-package com.example.helloworld
+package com.dixa.primes
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -11,13 +11,13 @@ import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
-object PrimeClient {
+object PrimesClient {
   def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/prime/10"))
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/prime/80"))
 
     responseFuture
       .onComplete {

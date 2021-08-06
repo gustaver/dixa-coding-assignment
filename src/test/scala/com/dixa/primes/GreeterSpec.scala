@@ -1,5 +1,5 @@
 //#full-example
-package com.example.helloworld
+package com.dixa.primes
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
@@ -30,7 +30,7 @@ class GreeterSpec
   val testKit = ActorTestKit(conf)
 
   val serverSystem: ActorSystem[_] = testKit.system
-  val bound = new GreeterServer(serverSystem).run()
+  val bound = new PrimesServer(serverSystem).run()
 
   // make sure server is bound before using client
   bound.futureValue
