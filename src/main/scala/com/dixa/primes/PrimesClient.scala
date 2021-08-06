@@ -17,13 +17,12 @@ object PrimesClient {
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext = system.executionContext
 
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(HttpRequest(uri = "http://localhost:8081/prime/80"))
+    val n = args.head.toInt
 
-    responseFuture
+    Http()
+      .singleRequest(HttpRequest(uri = s"http://localhost:8081/prime/$n"))
       .onComplete {
         case Success(res) => {
-//          res.entity.toStrict(3.seconds)
-//            .foreach(e => println(e.data.utf8String))
           res.entity.dataBytes
             .via(Framing.delimiter(ByteString(","), maximumFrameLength = 256))
             .map(b => b.utf8String)

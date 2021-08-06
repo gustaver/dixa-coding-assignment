@@ -52,7 +52,7 @@ object PrimesProxy {
       .newServerAt("localhost", 8081)
       .bind(route)
 
-    println(s"Server now online. Please navigate to http://localhost:8081/hello\nPress RETURN to stop")
+    println(s"Proxy sever online, make a GET request to http://localhost:8081/prime/<number>\nPress RETURN to stop server")
     // let it run until user presses return
     StdIn.readLine()
 
