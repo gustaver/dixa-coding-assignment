@@ -7,8 +7,6 @@ import akka.http.scaladsl.model._
 import akka.stream.scaladsl.Framing
 import akka.util.ByteString
 
-import scala.concurrent.Future
-import scala.concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
 object PrimesClient {

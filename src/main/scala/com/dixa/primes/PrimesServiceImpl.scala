@@ -1,13 +1,7 @@
 package com.dixa.primes
 
-import scala.concurrent.Future
-
 import akka.NotUsed
 import akka.actor.typed.ActorSystem
-import akka.stream.scaladsl.BroadcastHub
-import akka.stream.scaladsl.Keep
-import akka.stream.scaladsl.MergeHub
-import akka.stream.scaladsl.Sink
 import akka.stream.scaladsl.Source
 
 class PrimesServiceImpl(system: ActorSystem[_]) extends PrimesService {

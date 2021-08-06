@@ -6,5 +6,5 @@ object Primes {
 
   val primes = sieve(LazyList.from(2))
 
-  def primesUpTo(n: Int): List[Int] = primes.take(n).toList
+  def primesUpTo(n: Int): LazyList[Int] = primes.takeWhile(_ <= n)
 }

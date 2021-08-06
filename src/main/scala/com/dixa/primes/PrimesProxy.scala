@@ -1,24 +1,18 @@
 package com.dixa.primes
 
-import scala.concurrent.duration._
-import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Failure
-import scala.util.Success
+import scala.concurrent.ExecutionContext
 import scala.io.StdIn
 
-import akka.Done
-import akka.NotUsed
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.grpc.GrpcClientSettings
-import akka.stream.scaladsl.{Flow, Source}
+import akka.stream.scaladsl.Flow
 import akka.util.ByteString
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.common.EntityStreamingSupport
-import akka.http.scaladsl.marshalling.{Marshaller, Marshalling}
 
 
 object PrimesProxy {
@@ -41,8 +35,10 @@ object PrimesProxy {
     val route =
       path(matcher) { n: Option[Int] =>
         get {
+          val limit = n.get
+          println(s"Proxy got limit $limit")
           val responseStream =
-            client.primesStream(PrimeRequest(n.get))
+            client.primesStream(PrimeRequest(limit))
               .map(r => HttpEntity(ContentTypes.`text/plain(UTF-8)`, ByteString(r.prime.toString)))
           complete(responseStream)
         }
