@@ -9,14 +9,12 @@ option java_outer_classname = "HelloWorldProto";
 service GreeterService {
     // Sends a greeting
     rpc SayHello (HelloRequest) returns (HelloReply) {}
-    //#service-request-reply
-    //#service-stream
     // The stream of incoming HelloRequest messages are
     // sent out as corresponding HelloReply. From
     // all clients to all clients, like a chat room.
     rpc SayHelloToAll (stream HelloRequest) returns (stream HelloReply) {}
-    //#service-stream
-    //#service-request-reply
+
+    rpc ItKeepsReplying (HelloRequest) returns (stream HelloReply) {}
 }
 
 // The request message containing the user's name.

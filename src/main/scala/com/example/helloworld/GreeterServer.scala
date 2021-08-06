@@ -1,8 +1,5 @@
 package com.example.helloworld
 
-//#import
-
-
 import java.security.KeyStore
 import java.security.SecureRandom
 import java.security.cert.Certificate
@@ -28,10 +25,8 @@ import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
 import scala.concurrent.duration._
-//#import
 
 
-//#server
 object GreeterServer {
 
   def main(args: Array[String]): Unit = {
@@ -61,7 +56,7 @@ class GreeterServer(system: ActorSystem[_]) {
     bound.onComplete {
       case Success(binding) =>
         val address = binding.localAddress
-        println("gRPC server bound to {}:{}", address.getHostString, address.getPort)
+        println(s"gRPC server bound to ${address.getHostString}:${address.getPort}")
       case Failure(ex) =>
         println("Failed to bind gRPC endpoint, terminating system", ex)
         system.terminate()
@@ -69,9 +64,8 @@ class GreeterServer(system: ActorSystem[_]) {
 
     bound
   }
-  //#server
 
-
+  // tried to remove unnecessary security stuff... ¯\_(ツ)_/¯
   private def serverHttpContext: HttpsConnectionContext = {
     val privateKey =
       DERPrivateKeyLoader.load(PEMDecoder.decode(readPrivateKeyPem()))
@@ -96,7 +90,5 @@ class GreeterServer(system: ActorSystem[_]) {
 
   private def readPrivateKeyPem(): String =
     Source.fromResource("certs/server1.key").mkString
-  //#server
 
 }
-//#server

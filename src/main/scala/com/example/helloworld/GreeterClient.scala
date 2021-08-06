@@ -1,6 +1,5 @@
 package com.example.helloworld
 
-//#import
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
@@ -12,9 +11,7 @@ import akka.actor.typed.scaladsl.Behaviors
 import akka.grpc.GrpcClientSettings
 import akka.stream.scaladsl.Source
 
-//#import
 
-//#client-request-reply
 object GreeterClient {
 
   def main(args: Array[String]): Unit = {
@@ -29,24 +26,22 @@ object GreeterClient {
 
     names.foreach(singleRequestReply)
 
-    //#client-request-reply
     if (args.nonEmpty)
       names.foreach(streamingBroadcast)
-    //#client-request-reply
 
     def singleRequestReply(name: String): Unit = {
       println(s"Performing request: $name")
-      val reply = client.sayHello(HelloRequest(name))
-      reply.onComplete {
-        case Success(msg) =>
-          println(msg)
+      val responseStream = client.itKeepsReplying(HelloRequest(name))
+      val done: Future[Done] =
+        responseStream.runForeach(reply => println(s"$name got streaming reply: ${reply.message}"))
+      done.onComplete {
+        case Success(_) =>
+          println("streamingBroadcast done")
         case Failure(e) =>
-          println(s"Error: $e")
+          println(s"Error streamingBroadcast: $e")
       }
     }
 
-    //#client-request-reply
-    //#client-stream
     def streamingBroadcast(name: String): Unit = {
       println(s"Performing streaming requests: $name")
 
@@ -69,10 +64,7 @@ object GreeterClient {
           println(s"Error streamingBroadcast: $e")
       }
     }
-    //#client-stream
-    //#client-request-reply
 
   }
 
 }
-//#client-request-reply
